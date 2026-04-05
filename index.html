@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Janarthanan Palanivel — AI × Biotech Innovator</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{
+  --gold:#f5a623;--gold2:#ffd700;--gold-glow:rgba(245,166,35,0.25);
+  --bg:#050508;--surface:#0a0a12;--card:#0f0f1c;
+  --text:#f0f0ff;--muted:#888;--border:rgba(245,166,35,0.15);
+}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;overflow-x:hidden;}
+
+/* CANVAS */
+#particle-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1.2rem 4rem;display:flex;justify-content:space-between;align-items:center;backdrop-filter:blur(12px);background:rgba(5,5,8,0.7);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.3rem;color:var(--gold);letter-spacing:2px;}
+.nav-links{display:flex;gap:2rem;}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.85rem;letter-spacing:1px;text-transform:uppercase;transition:color .3s;}
+.nav-links a:hover{color:var(--gold);}
+.nav-cta{background:var(--gold);color:#000;padding:.5rem 1.4rem;border-radius:50px;font-weight:700;font-size:.85rem;text-decoration:none;transition:all .3s;}
+.nav-cta:hover{background:var(--gold2);transform:translateY(-1px);}
+
+/* SECTIONS */
+section{position:relative;z-index:1;min-height:100vh;display:flex;align-items:center;padding:7rem 4rem 4rem;}
+
+/* HERO */
+#hero{padding-top:8rem;}
+.hero-inner{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:1300px;margin:0 auto;gap:4rem;}
+.hero-left{flex:1;}
+.hero-tag{display:inline-block;background:rgba(245,166,35,0.1);border:1px solid var(--border);color:var(--gold);padding:.35rem 1rem;border-radius:50px;font-size:.78rem;letter-spacing:2px;text-transform:uppercase;margin-bottom:1.5rem;}
+.hero-name{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2.5rem,5vw,4.5rem);line-height:1.05;margin-bottom:1rem;}
+.hero-name span{color:var(--gold);}
+.hero-tagline{font-size:1.1rem;color:var(--muted);margin-bottom:2rem;line-height:1.7;max-width:520px;}
+.hero-tagline strong{color:var(--text);}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap;}
+.btn-primary{background:var(--gold);color:#000;padding:.75rem 2rem;border-radius:50px;font-weight:700;text-decoration:none;transition:all .3s;font-size:.9rem;}
+.btn-primary:hover{background:var(--gold2);transform:translateY(-2px);box-shadow:0 8px 24px var(--gold-glow);}
+.btn-outline{border:1px solid var(--border);color:var(--text);padding:.75rem 2rem;border-radius:50px;font-weight:500;text-decoration:none;transition:all .3s;font-size:.9rem;}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold);}
+.hero-socials{display:flex;gap:1rem;margin-top:2rem;}
+.social-pill{display:flex;align-items:center;gap:.5rem;background:rgba(255,255,255,0.04);border:1px solid var(--border);padding:.4rem 1rem;border-radius:50px;text-decoration:none;color:var(--muted);font-size:.8rem;transition:all .3s;}
+.social-pill:hover{border-color:var(--gold);color:var(--gold);}
+.hero-right{flex:0 0 360px;display:flex;justify-content:center;}
+.photo-wrap{position:relative;width:320px;height:420px;}
+.photo-ring{position:absolute;inset:-20px;border-radius:50%;border:1px dashed rgba(245,166,35,0.3);animation:spin 20s linear infinite;}
+.photo-ring2{position:absolute;inset:-40px;border-radius:50%;border:1px dashed rgba(245,166,35,0.15);animation:spin 35s linear infinite reverse;}
+.photo-glow{position:absolute;inset:0;border-radius:24px;background:radial-gradient(ellipse at center,rgba(245,166,35,0.2) 0%,transparent 70%);z-index:0;}
+.photo-frame{position:relative;z-index:1;width:100%;height:100%;border-radius:24px;overflow:hidden;border:1px solid rgba(245,166,35,0.3);}
+.photo-frame img{width:100%;height:100%;object-fit:cover;object-position:center top;filter:brightness(1.05) contrast(1.05);}
+.photo-badge{position:absolute;bottom:-12px;left:50%;transform:translateX(-50%);background:var(--gold);color:#000;padding:.4rem 1.2rem;border-radius:50px;font-size:.75rem;font-weight:700;white-space:nowrap;z-index:2;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* SECTION HEADERS */
+.section-label{font-family:'Space Mono',monospace;font-size:.75rem;color:var(--gold);letter-spacing:3px;text-transform:uppercase;margin-bottom:.75rem;}
+.section-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(2rem,4vw,3rem);line-height:1.1;margin-bottom:1.5rem;}
+.section-title span{color:var(--gold);}
+.section-sub{color:var(--muted);line-height:1.8;max-width:600px;font-size:1rem;}
+
+/* ABOUT */
+#about{background:linear-gradient(180deg,transparent,rgba(245,166,35,0.02),transparent);}
+.about-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;width:100%;}
+.about-stats{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:2rem;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;text-align:center;transition:all .3s;}
+.stat-card:hover{border-color:var(--gold);transform:translateY(-3px);}
+.stat-num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--gold);}
+.stat-label{font-size:.8rem;color:var(--muted);margin-top:.3rem;}
+.about-story{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:2.5rem;}
+.story-para{color:var(--muted);line-height:1.9;margin-bottom:1rem;font-size:.95rem;}
+.story-para strong{color:var(--gold);}
+.story-para em{color:var(--text);}
+
+/* VERTICALS */
+#verticals{background:var(--surface);}
+.verticals-inner{max-width:1200px;margin:0 auto;width:100%;}
+.verticals-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-top:3rem;}
+.vertical-card{background:var(--card);border:1px solid var(--border);border-radius:24px;padding:2.5rem;transition:all .4s;cursor:default;}
+.vertical-card:hover{transform:translateY(-6px);box-shadow:0 20px 60px rgba(245,166,35,0.1);}
+.vertical-card.bio:hover{border-color:rgba(0,255,150,0.4);}
+.vertical-card.ai:hover{border-color:rgba(180,100,255,0.4);}
+.v-icon{width:56px;height:56px;border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:1.6rem;margin-bottom:1.5rem;}
+.bio .v-icon{background:rgba(0,255,150,0.1);border:1px solid rgba(0,255,150,0.2);}
+.ai .v-icon{background:rgba(180,100,255,0.1);border:1px solid rgba(180,100,255,0.2);}
+.v-title{font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:700;margin-bottom:.75rem;}
+.v-desc{color:var(--muted);line-height:1.8;font-size:.9rem;margin-bottom:1.5rem;}
+.v-tags{display:flex;flex-wrap:wrap;gap:.5rem;}
+.v-tag{background:rgba(255,255,255,0.04);border:1px solid var(--border);padding:.25rem .75rem;border-radius:50px;font-size:.75rem;color:var(--muted);}
+
+/* EXPERIENCE */
+#experience{background:linear-gradient(180deg,transparent,rgba(245,166,35,0.02),transparent);}
+.exp-inner{max-width:1200px;margin:0 auto;width:100%;}
+.exp-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:3rem;}
+.exp-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2rem;transition:all .3s;position:relative;overflow:hidden;}
+.exp-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),transparent);}
+.exp-card:hover{transform:translateY(-4px);border-color:rgba(245,166,35,0.4);}
+.exp-org{font-size:.75rem;color:var(--gold);letter-spacing:2px;text-transform:uppercase;margin-bottom:.75rem;}
+.exp-role{font-family:'Syne',sans-serif;font-size:1.2rem;font-weight:700;margin-bottom:.5rem;}
+.exp-period{font-size:.8rem;color:var(--muted);margin-bottom:1rem;font-family:'Space Mono',monospace;}
+.exp-desc{font-size:.85rem;color:var(--muted);line-height:1.7;}
+
+/* PROJECTS */
+#biotech-projects,#web-projects{padding:5rem 4rem;}
+.projects-inner{max-width:1200px;margin:0 auto;width:100%;}
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.5rem;margin-top:3rem;}
+.project-card{background:var(--card);border:1px solid var(--border);border-radius:20px;padding:2rem;transition:all .3s;}
+.project-card:hover{transform:translateY(-4px);border-color:rgba(245,166,35,0.35);box-shadow:0 16px 40px rgba(0,0,0,0.4);}
+.proj-num{font-family:'Space Mono',monospace;font-size:.7rem;color:var(--gold);letter-spacing:2px;margin-bottom:1rem;}
+.proj-title{font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;margin-bottom:.75rem;line-height:1.3;}
+.proj-desc{color:var(--muted);font-size:.85rem;line-height:1.7;margin-bottom:1rem;}
+.proj-stack{display:flex;flex-wrap:wrap;gap:.4rem;}
+.proj-tag{background:rgba(245,166,35,0.08);border:1px solid rgba(245,166,35,0.2);color:var(--gold);padding:.2rem .65rem;border-radius:50px;font-size:.72rem;}
+
+/* SKILLS */
+#skills{background:var(--surface);}
+.skills-inner{max-width:1200px;margin:0 auto;width:100%;}
+.skills-grid{display:grid;grid-template-columns:1fr 1fr;gap:3rem;margin-top:3rem;}
+.skills-col h3{font-family:'Syne',sans-serif;font-size:1.3rem;margin-bottom:1.5rem;color:var(--gold);}
+.skill-group{margin-bottom:1.5rem;}
+.skill-group-title{font-size:.75rem;letter-spacing:2px;text-transform:uppercase;color:var(--muted);margin-bottom:.75rem;}
+.skill-pills{display:flex;flex-wrap:wrap;gap:.5rem;}
+.skill-pill{background:var(--card);border:1px solid var(--border);padding:.4rem 1rem;border-radius:50px;font-size:.8rem;color:var(--text);transition:all .3s;}
+.skill-pill:hover{border-color:var(--gold);color:var(--gold);}
+.soft-skills{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;}
+.soft-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:1rem;font-size:.85rem;display:flex;align-items:center;gap:.75rem;}
+.soft-item .icon{font-size:1.2rem;}
+
+/* CERTIFICATIONS */
+#certifications{background:linear-gradient(180deg,transparent,rgba(245,166,35,0.02),transparent);}
+.certs-inner{max-width:1200px;margin:0 auto;width:100%;}
+.certs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.25rem;margin-top:3rem;}
+.cert-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;display:flex;align-items:flex-start;gap:1rem;transition:all .3s;}
+.cert-card:hover{border-color:rgba(245,166,35,0.4);transform:translateY(-2px);}
+.cert-icon{width:44px;height:44px;background:rgba(245,166,35,0.1);border:1px solid rgba(245,166,35,0.2);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;flex-shrink:0;}
+.cert-name{font-weight:600;font-size:.9rem;margin-bottom:.25rem;}
+.cert-by{font-size:.75rem;color:var(--gold);}
+
+/* STARTUP */
+#startup{background:var(--surface);}
+.startup-inner{max-width:1200px;margin:0 auto;width:100%;display:grid;grid-template-columns:1fr 1fr;gap:5rem;align-items:center;}
+.startup-card{background:var(--card);border:1px solid rgba(245,166,35,0.3);border-radius:24px;padding:3rem;position:relative;overflow:hidden;}
+.startup-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--gold),var(--gold2));}
+.startup-name{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--gold);margin-bottom:.5rem;}
+.startup-full{color:var(--muted);font-size:.85rem;margin-bottom:1.5rem;font-family:'Space Mono',monospace;}
+.startup-desc{color:var(--muted);line-height:1.8;margin-bottom:2rem;}
+.startup-features{display:flex;flex-direction:column;gap:.75rem;}
+.startup-feat{display:flex;align-items:center;gap:.75rem;font-size:.9rem;}
+.startup-feat::before{content:'→';color:var(--gold);}
+
+/* COLLAB */
+#collab{background:linear-gradient(180deg,transparent,rgba(245,166,35,0.03),transparent);}
+.collab-inner{max-width:1200px;margin:0 auto;width:100%;}
+.collab-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1rem;margin-top:3rem;}
+.collab-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:1.5rem;text-align:center;transition:all .3s;}
+.collab-card:hover{border-color:var(--gold);transform:translateY(-3px);}
+.collab-icon{font-size:2rem;margin-bottom:.75rem;}
+.collab-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;margin-bottom:.5rem;}
+.collab-desc{font-size:.8rem;color:var(--muted);line-height:1.6;}
+
+/* CONTACT */
+#contact{background:var(--surface);}
+.contact-inner{max-width:1000px;margin:0 auto;text-align:center;width:100%;}
+.contact-tagline{font-size:1.1rem;color:var(--muted);margin:1.5rem 0 3rem;line-height:1.7;}
+.contact-links{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;}
+.contact-link{display:flex;align-items:center;gap:.75rem;background:var(--card);border:1px solid var(--border);padding:1rem 1.8rem;border-radius:14px;text-decoration:none;color:var(--text);transition:all .3s;font-size:.9rem;}
+.contact-link:hover{border-color:var(--gold);color:var(--gold);transform:translateY(-3px);box-shadow:0 8px 24px rgba(245,166,35,0.1);}
+.contact-link .icon{font-size:1.2rem;}
+
+/* FOOTER */
+footer{text-align:center;padding:2rem;color:var(--muted);font-size:.8rem;border-top:1px solid var(--border);position:relative;z-index:1;}
+footer span{color:var(--gold);}
+
+/* ANIMATIONS */
+.fade-up{opacity:0;transform:translateY(40px);transition:all .8s cubic-bezier(.16,1,.3,1);}
+.fade-up.visible{opacity:1;transform:translateY(0);}
+.stagger-1{transition-delay:.1s;}
+.stagger-2{transition-delay:.2s;}
+.stagger-3{transition-delay:.3s;}
+.stagger-4{transition-delay:.4s;}
+
+/* SCROLL INDICATOR */
+.scroll-hint{position:absolute;bottom:2rem;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:.5rem;color:var(--muted);font-size:.75rem;letter-spacing:2px;text-transform:uppercase;animation:bounce 2s infinite;}
+.scroll-hint::after{content:'';width:1px;height:40px;background:linear-gradient(to bottom,var(--gold),transparent);}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0);}50%{transform:translateX(-50%) translateY(-6px);}}
+
+/* DIVIDER */
+.gold-divider{width:60px;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold2));border-radius:2px;margin-bottom:1.5rem;}
+
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem;}
+  .nav-links{display:none;}
+  section{padding:5rem 1.5rem 3rem;}
+  .hero-inner{flex-direction:column-reverse;text-align:center;}
+  .hero-right{flex:none;}
+  .photo-wrap{width:240px;height:300px;}
+  .about-inner,.verticals-grid,.skills-grid,.startup-inner{grid-template-columns:1fr;}
+  .exp-grid{grid-template-columns:1fr;}
+  .hero-socials{justify-content:center;}
+  .hero-btns{justify-content:center;}
+}
+</style>
+</head>
+<body>
+
+<canvas id="particle-canvas"></canvas>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Janarthanan P</div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#verticals">Expertise</a>
+    <a href="#experience">Experience</a>
+    <a href="#biotech-projects">Projects</a>
+    <a href="#skills">Skills</a>
+    <a href="#startup">Startup</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <a href="mailto:janarthanan12102005@gmail.com" class="nav-cta">Hire Me</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-inner">
+    <div class="hero-left">
+      <div class="hero-tag fade-up">🧬 AI × Biotechnology Innovator</div>
+      <h1 class="hero-name fade-up stagger-1">
+        Janarthanan<br><span>Palanivel</span>
+      </h1>
+      <p class="hero-tagline fade-up stagger-2">
+        <strong>Biotech Student. AI Builder. Startup Founder.</strong><br>
+        Where life science meets artificial intelligence — building real tools that solve real problems in healthcare, research, and beyond.
+      </p>
+      <div class="hero-btns fade-up stagger-3">
+        <a href="#biotech-projects" class="btn-primary">View Projects</a>
+        <a href="#contact" class="btn-outline">Let's Connect</a>
+      </div>
+      <div class="hero-socials fade-up stagger-4">
+        <a href="https://github.com/jana12102005" target="_blank" class="social-pill">⌨ GitHub</a>
+        <a href="https://www.linkedin.com/in/janarthanan-p-080848300/" target="_blank" class="social-pill">💼 LinkedIn</a>
+        <a href="mailto:janarthanan12102005@gmail.com" class="social-pill">✉ Email</a>
+      </div>
+    </div>
+    <div class="hero-right fade-up stagger-2">
+      <div class="photo-wrap">
+        <div class="photo-ring"></div>
+        <div class="photo-ring2"></div>
+        <div class="photo-glow"></div>
+        <div class="photo-frame">
+          <img src="portrait.jpg" alt="Janarthanan Palanivel"/>       </div>
+        <div class="photo-badge">🧬 AI × Biotech</div>
+      </div>
+    </div>
+  </div>
+  <div class="scroll-hint">Scroll</div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-inner">
+    <div class="fade-up">
+      <div class="section-label">About Me</div>
+      <div class="gold-divider"></div>
+      <h2 class="section-title">The <span>Story</span><br>Behind the Work</h2>
+      <p class="section-sub">From a small town to IISc Bengaluru — driven by curiosity and code.</p>
+      <div class="about-stats">
+        <div class="stat-card fade-up stagger-1"><div class="stat-num">10+</div><div class="stat-label">Projects Built</div></div>
+        <div class="stat-card fade-up stagger-2"><div class="stat-num">IISc</div><div class="stat-label">Research Intern</div></div>
+        <div class="stat-card fade-up stagger-3"><div class="stat-num">CEO</div><div class="stat-label">New Star Infosis</div></div>
+        <div class="stat-card fade-up stagger-4"><div class="stat-num">2027</div><div class="stat-label">B.Tech Biotech</div></div>
+      </div>
+    </div>
+    <div class="about-story fade-up stagger-2">
+      <p class="story-para">I didn't get the branch everyone wants — no CSE, no AIDS, no CyS. I got <strong>Biotechnology</strong>. But I made a decision: my department wouldn't define my ceiling.</p>
+      <p class="story-para">While studying life sciences, I taught myself <em>Python, machine learning, deep learning, web development, bioinformatics</em> — and built real tools that actually work. Not tutorials. Real systems.</p>
+      <p class="story-para">That journey took me to <strong>IISc Bengaluru</strong> as a Research Intern, where I worked on Alzheimer's detection using gene expression data under Dr. K. Sekar — one of India's top research institutions.</p>
+      <p class="story-para">I also founded <strong>New Star Infosis</strong> — a startup delivering AI, ML, and web solutions to students and organizations at accessible rates. Because good technology shouldn't be gated by money.</p>
+      <p class="story-para" style="margin-bottom:0">I'm in my element <strong>at the intersection of biology and AI</strong> — where a protein structure becomes a dataset and a disease becomes a solvable problem.</p>
+    </div>
+  </div>
+</section>
+
+<!-- VERTICALS -->
+<section id="verticals">
+  <div class="verticals-inner">
+    <div class="fade-up">
+      <div class="section-label">Core Expertise</div>
+      <div class="gold-divider"></div>
+      <h2 class="section-title">Two <span>Verticals</span>,<br>One Vision</h2>
+    </div>
+    <div class="verticals-grid">
+      <div class="vertical-card bio fade-up stagger-1">
+        <div class="v-icon">🧬</div>
+        <div class="v-title">Biotech × Bioinformatics</div>
+        <p class="v-desc">Applying AI and computational methods to biological data — from gene expression to protein structures. Building tools that bridge the lab and the algorithm.</p>
+        <div class="v-tags">
+          <span class="v-tag">Gene Expression Analysis</span><span class="v-tag">Biomarker Discovery</span><span class="v-tag">Protein Sequence AI</span><span class="v-tag">Drug Discovery</span><span class="v-tag">Molecular Docking</span><span class="v-tag">ADMET</span><span class="v-tag">Cryo-EM</span><span class="v-tag">MDS</span><span class="v-tag">GEO Datasets</span><span class="v-tag">Multi-Omics</span>
+        </div>
+      </div>
+      <div class="vertical-card ai fade-up stagger-2">
+        <div class="v-icon">🤖</div>
+        <div class="v-title">AI × Web Development</div>
+        <p class="v-desc">Building intelligent systems and web applications — from computer vision and deep learning models to full-stack platforms that serve real users at scale.</p>
+        <div class="v-tags">
+          <span class="v-tag">Deep Learning</span><span class="v-tag">Computer Vision</span><span class="v-tag">Random Forest</span><span class="v-tag">XGBoost</span><span class="v-tag">Flask</span><span class="v-tag">OpenCV</span><span class="v-tag">TensorFlow</span><span class="v-tag">CNN</span><span class="v-tag">Network Security</span><span class="v-tag">Ethical Hacking</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="exp-inner">
+    <div class="fade-up">
+      <div class="section-label">Experience</div>
+      <div class="gold-divider"></div>
+      <h2 class="section-title">Where I've <span>Worked</span></h2>
+    </div>
+    <div class="exp-grid">
+      <div class="exp-card fade-up stagger-1">
+        <div class="exp-org">Indian Institute of Science</div>
+        <div class="exp-role">Research Intern</div>
+        <div class="exp-period">May 2025 – Jul 2025 · Bengaluru</div>
+        <p class="exp-desc">Worked under Dr. K. Sekar at the Dept. of Computational & Data Sciences. Contributed to Alzheimer's Detection using Gene Expression and XGBoost with a Tkinter GUI. Processed GEO datasets, built ML models, conducted literature reviews.</p>
+      </div>
+      <div class="exp-card fade-up stagger-2">
+        <div class="exp-org">New Star Infosis</div>
+        <div class="exp-role">Founder & CEO</div>
+        <div class="exp-period">Feb 2024 – Present · Namakkal, Tamil Nadu</div>
+        <p class="exp-desc">Leading vision, strategy, and execution of a tech-focused organization delivering AI, ML, and software solutions. Providing final-year project mentoring, workshops, LLM-integrated projects, and automation systems to students.</p>
+      </div>
+      <div class="exp-card fade-up stagger-3">
+        <div class="exp-org">Paavai Innovation Forum</div>
+        <div class="exp-role">President — InnoSphere Club</div>
+        <div class="exp-period">Oct 2025 – Present · Namakkal</div>
+        <p class="exp-desc">Leading the InnoSphere innovation club — managing interdisciplinary research projects, coordinating teams across AI, biotech, and healthcare domains. Mentoring students and overseeing project execution and technical direction.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BIOTECH PROJECTS -->
+<section id="biotech-projects">
+  <div class="projects-inner">
+    <div class="fade-up">
+      <div class="section-label">🧬 Biotech Projects</div>
+      <div class="gold-divider"></div>
+      <h2 class="section-title">AI Meets <span>Biology</span></h2>
+      <p class="section-sub">Computational approaches to real healthcare and research problems.</p>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card fade-up stagger-1">
+        <div class="proj-num">BIO — 01</div>
+        <div class="proj-title">AI-Based Neurodegenerative Disease Biomarker Discovery</div>
+        <p class="proj-desc">Large-scale gene expression analysis using GEO datasets (GSE48350) for Alzheimer's disease. Built Random Forest and Deep Learning models for disease classification and biomarker identification.</p>
+        <div class="proj-stack"><span class="proj-tag">Python</span><span class="proj-tag">XGBoost</span><span class="proj-tag">GEO Datasets</span><span class="proj-tag">Multi-Omics</span><span class="proj-tag">Tkinter</span></div>
+      </div>
+      <div class="project-card fade-up stagger-2">
+        <div class="proj-num">BIO — 02</div>
+        <div class="proj-title">Protein Sequence Similarity Search using AI Embeddings</div>
+        <p class="proj-desc">AI-driven protein similarity search using embedding-based representations for biologically meaningful detection beyond exact sequence matching. Applicable to target identification and functional annotation.</p>
+        <div class="proj-stack"><span class="proj-tag">Python</span><span class="proj-tag">NLP Embeddings</span><span class="proj-tag">Bioinformatics</span></div>
+      </div>
+      <div class="project-card fade-up stagger-3">
+        <div class="proj-num">BIO — 03</div>
+        <div class="proj-title">ML Models for Blood Clot & Stroke Detection</div>
+        <p class="proj-desc">Developed ML and deep learning models for blood clot and stroke detection using CT scan images, focusing on diagnostic accuracy and clinical relevance.</p>
+        <div class="proj-stack"><span class="proj-tag">CNN</span><span class="proj-tag">TensorFlow</span><span class="proj-tag">OpenCV</span><span class="proj-tag">Medical Imaging</span></div>
+      </div>
+      <div class="project-card fade-up stagger-1">
+        <div class="proj-num">BIO — 04</div>
+        <div class="proj-title">Hybrid VGG16 + XGBoost Medical Image Classification</div>
+        <p class="proj-desc">Hybrid AI pipeline combining CNN-based feature extraction with XGBoost classification to improve performance on medical imaging tasks.</p>
+        <div class="proj-stack"><span class="proj-tag">VGG16</span><span class="proj-tag">XGBoost</span><span class="proj-tag">Transfer Learning</span></div>
+      </div>
+      <div class="project-card fade-up stagger-2">
+        <div class="proj-num">BIO — 05</div>
+        <div class="proj-title">Cryo-EM Research Workflow & Slot Management System</div>
+        <p class="proj-desc">Workflow automation system for Cryo-EM facilities — slot allocation, experiment tracking, and notifications. Aligned with structural biology research environments.</p>
+        <div class="proj-stack"><span class="proj-tag">Python</span><span class="proj-tag">Flask</span><span class="proj-tag">MySQL</span><span class="proj-tag">Automation</span></div>
+      </div>
+      <div class="project-card fade-up stagger-3">
+        <div class="proj-num">BIO — 06</div>
+        <div class="proj-title">Enzyme Kinetics & Bioprocess Analysis Web Platform</div>
+        <p class="proj-desc">Flask-based application to simulate enzyme kinetics and reaction behavior, supporting enzyme characterization relevant to biologics manufacturing.</p>
+        <div class="proj-stack"><span class="proj-tag">Flask</span><span class="proj-tag">Python</span><span class="proj-tag">Biochemistry</span><span class="proj-tag">Web</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WEB PROJECTS -->
+<section id="web-projects" style="background:var(--surface);">
+  <div class="projects-inner">
+    <div class="fade-up">
+      <div class="section-label">💻 Web & AI Projects</div>
+      <div class="gold-divider"></div>
+      <h2 class="section-title">Real <span>Tools</span>,<br>Real Impact</h2>
+      <p class="section-sub">Applications built to solve actual everyday problems.</p>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card fade-up stagger-1">
+        <div class="proj-num">WEB — 01</div>
+        <div class="proj-title">Smart Medical Management System</div>
+        <p class="proj-desc">Multi-role healthcare platform where hospitals, clinics, and medical shops each have unique IDs with permission-based access. Hospitals can see full patient history; shops and clinics have limited scope. Secure, role-based medical records.</p>
+        <div class="proj-stack"><span class="proj-tag">Python</span><span class="proj-tag">Flask</span><span class="proj-tag">MySQL</span><span class="proj-tag">Role-Based Auth</span></div>
+      </div>
+      <div class="project-card fade-up stagger-2">
+        <div class="proj-num">WEB — 02</div>
+        <div class="proj-title">Medicine & Water Reminder System</div>
+        <p class="proj-desc">Health management app where users set medicine schedules and water intake reminders. Automated email alerts sent at the right time — helping patients never miss a dose.</p>
+        <div class="proj-stack"><span class="proj-tag">Python</span><span class="proj-tag">Email Automation</span><span class="proj-tag">Scheduling</span></div>
+      </div>
+      <div class="project-card fade-up stagger-3">
+        <div class="proj-num">WEB — 03</div>
+        <div class="proj-title">AI Malicious Traffic Detector</div>
+        <p class="proj-desc">ML-powered network packet analysis system to detect malicious traffic patterns in real-time. Built using Scapy for packet capture and ML classifiers for anomaly detection.</p>
+        <div class="proj-stack"><span class="proj-tag">Scapy</span><span class="proj-tag">Machine Learning</span><span class="proj-tag">Cybersecurity</span><span class="proj-tag">Python</span></div>
+      </div>
+      <div class="project-card fade-up stagger-1">
+        <div class="proj-num">WEB — 04</div>
+        <div class="proj-title">Real-Time Face Recognition System</div>
+        <p class="proj-desc">Computer vision system using OpenCV for real-time face detection, recognition, and identity-based event handling — applicable to access control and attendance systems.</p>
+        <div class="proj-stack"><span class="proj-tag">OpenCV</span><span class="proj-tag">Python</span><span class="proj-tag">CV2</span><span class="proj-tag">Deep Learning</span></div>
+      </div>
+      <div class="project-card fade-up stagger-2">
+        <div class="proj-num">WEB — 05</div>
+        <div class="proj-title">Plant Disease Detection System</div>
+        <p class="proj-desc">CNN-based application for automated plant disease identification from leaf images — demonstrating AI applications in agricultural biotechnology with practical farming impact.</p>
+        <div class="proj-stack"><span class="proj-tag">CNN</span><span class="proj-tag">TensorFlow</span><span class="proj-tag">AgriTech</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="skills-inner">
+    <div class="fade-up">
+      <div class="section-label">Skills</div>
+      <div class="gold-divider"></div>
+      <h2 class="section-title">Tech & <span>Soft</span> Skills</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="fade-up stagger-1">
+        <h3>💻 Technical Skills</h3>
+        <div class="skill-group">
+          <div class="skill-group-title">Programming Languages</div>
+          <div class="skill-pills">
+            <span class="skill-pill">Python</span><span class="skill-pill">C</span><span class="skill-pill">C++</span><span class="skill-pill">Java</span><span class="skill-pill">SQL</span><span class="skill-pill">HTML</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">AI / Machine Learning</div>
+          <div class="skill-pills">
+            <span class="skill-pill">Machine Learning</span><span class="skill-pill">Deep Learning</span><span class="skill-pill">TensorFlow</span><span class="skill-pill">XGBoost</span><span class="skill-pill">Random Forest</span><span class="skill-pill">CNN</span><span class="skill-pill">VGG16</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">Bioinformatics & Research</div>
+          <div class="skill-pills">
+            <span class="skill-pill">Gene Expression Analysis</span><span class="skill-pill">BLAST</span><span class="skill-pill">GEO Datasets</span><span class="skill-pill">Biomarker Discovery</span><span class="skill-pill">Protein Analysis</span><span class="skill-pill">Molecular Docking</span><span class="skill-pill">ADMET</span><span class="skill-pill">Cryo-EM</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">Tools & Frameworks</div>
+          <div class="skill-pills">
+            <span class="skill-pill">Flask</span><span class="skill-pill">OpenCV</span><span class="skill-pill">Tkinter</span><span class="skill-pill">Scapy</span><span class="skill-pill">MySQL</span><span class="skill-pill">Git</span>
+          </div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-group-title">Cybersecurity & Networking</div>
+          <div class="skill-pills">
+            <span class="skill-pill">Ethical Hacking</span><span class="skill-pill">CCNA Networking</span><span class="skill-pill">Palo Alto Networks</span><span class="skill-pill">Security Operations</span>
+          </div>
+        </div>
+      </div>
+      <div class="fade-up stagger-2">
+        <h3>🌟 Soft Skills</h3>
+        <div class="soft-skills">
+          <div class="soft-item"><span class="icon">🎯</span>Leadership</div>
+          <div class="soft-item"><span class="icon">🤝</span>Team Management</div>
+          <div class="soft-item"><span class="icon">💡</span>Problem Solving</div>
+          <div class="soft-item"><span class="icon">🔬</span>Research Mindset</div>
+          <div class="soft-item"><span class="icon">🚀</span>Entrepreneurship</div>
+          <div class="soft-item"><span class="icon">📊</span>Strategic Thinking</div>
+          <div class="soft-item"><span class="icon">🗣️</span>Communication</div>
+          <div class="soft-item"><span class="icon">🧭</span>Decision Making</div>
+          <div class="soft-item"><span class="icon">📚</span>Self-Learning</div>
+          <div class="soft-item"><span class="icon">🌐</span>Cross-domain Thinking</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CERTIFICATIONS -->
+<section id="certifications">
+  <div class="certs-inner">
+    <div class="fade-up">
+      <div class="section-label">Certifications</div>
+      <div class="gold-divider"></div>
+      <h2 class="section-title">Verified <span>Credentials</span></h2>
+    </div>
+    <div class="certs-grid">
+      <div class="cert-card fade-up stagger-1"><div class="cert-icon">🔐</div><div><div class="cert-name">Cybersecurity Virtual Internship</div><div class="cert-by">Palo Alto Networks × AICTE · 2025</div></div></div>
+      <div class="cert-card fade-up stagger-2"><div class="cert-icon">☁️</div><div><div class="cert-name">Cloud Security Fundamentals</div><div class="cert-by">AICTE EduSkills</div></div></div>
+      <div class="cert-card fade-up stagger-3"><div class="cert-icon">🛡️</div><div><div class="cert-name">Cybersecurity Fundamentals</div><div class="cert-by">AICTE EduSkills</div></div></div>
+      <div class="cert-card fade-up stagger-1"><div class="cert-icon">🔒</div><div><div class="cert-name">Security Operations Fundamentals</div><div class="cert-by">AICTE EduSkills</div></div></div>
+      <div class="cert-card fade-up stagger-2"><div class="cert-icon">🤖</div><div><div class="cert-name">Prompt Engineering</div><div class="cert-by">AICTE EduSkills</div></div></div>
+      <div class="cert-card fade-up stagger-3"><div class="cert-icon">🌐</div><div><div class="cert-name">Introduction to HTML & CSS</div><div class="cert-by">AICTE EduSkills</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- STARTUP -->
+<section id="startup">
+  <div class="startup-inner">
+    <div class="fade-up">
+      <div class="section-label">My Startup</div>
+      <div class="gold-divider"></div>
+      <h2 class="section-title">Bridging <span>Academia</span><br>& Industry</h2>
+      <p class="section-sub">Founded to make real-world tech skills accessible to every student — regardless of background or financial status.</p>
+    </div>
+    <div class="startup-card fade-up stagger-2">
+      <div class="startup-name">NSIS</div>
+      <div class="startup-full">New Star Infosis · Founded Feb 2024</div>
+      <p class="startup-desc">A technology-focused organization delivering AI, Machine Learning, and Software Development solutions — with a focus on bridging the gap between academic learning and industry-ready skills.</p>
+      <div class="startup-features">
+        <div class="startup-feat">AI & ML solutions for real-world use cases</div>
+        <div class="startup-feat">Final-year project development & mentoring</div>
+        <div class="startup-feat">Technical workshops & training programs</div>
+        <div class="startup-feat">LLM-integrated application development</div>
+        <div class="startup-feat">Web, desktop & data-driven app development</div>
+        <div class="startup-feat">Certificate automation & workflow systems</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COLLAB -->
+<section id="collab">
+  <div class="collab-inner">
+    <div class="fade-up">
+      <div class="section-label">Collaboration</div>
+      <div class="gold-divider"></div>
+      <h2 class="section-title">Areas of <span>Interest</span></h2>
+      <p class="section-sub">I'm always open to collaboration, research opportunities, and meaningful projects.</p>
+    </div>
+    <div class="collab-grid">
+      <div class="collab-card fade-up stagger-1"><div class="collab-icon">🧬</div><div class="collab-title">Computational Biology</div><div class="collab-desc">AI-driven research in genomics, proteomics and drug discovery</div></div>
+      <div class="collab-card fade-up stagger-2"><div class="collab-icon">🏥</div><div class="collab-title">Healthcare AI</div><div class="collab-desc">Building diagnostic tools and clinical decision support systems</div></div>
+      <div class="collab-card fade-up stagger-3"><div class="collab-icon">🔬</div><div class="collab-title">Research Projects</div><div class="collab-desc">Academic collaborations in bioinformatics and translational research</div></div>
+      <div class="collab-card fade-up stagger-1"><div class="collab-icon">💻</div><div class="collab-title">Startup Ideas</div><div class="collab-desc">Tech startups solving real problems in healthcare and education</div></div>
+      <div class="collab-card fade-up stagger-2"><div class="collab-icon">🛡️</div><div class="collab-title">Cybersecurity</div><div class="collab-desc">Network security, ethical hacking, and security automation tools</div></div>
+      <div class="collab-card fade-up stagger-3"><div class="collab-icon">🌱</div><div class="collab-title">Student Mentorship</div><div class="collab-desc">Helping students navigate tech, research, and career paths</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner fade-up">
+    <div class="section-label">Contact</div>
+    <div class="gold-divider" style="margin:0 auto 1.5rem;"></div>
+    <h2 class="section-title">Let's <span>Build</span> Something</h2>
+    <p class="contact-tagline">Whether it's a research collaboration, a startup idea, a project, or just a conversation about AI and biology — I'm all ears.</p>
+    <div class="contact-links">
+      <a href="mailto:janarthanan12102005@gmail.com" class="contact-link"><span class="icon">✉</span>janarthanan12102005@gmail.com</a>
+      <a href="https://github.com/jana12102005" target="_blank" class="contact-link"><span class="icon">⌨</span>github.com/jana12102005</a>
+      <a href="https://www.linkedin.com/in/janarthanan-p-080848300/" target="_blank" class="contact-link"><span class="icon">💼</span>LinkedIn Profile</a>
+      <a href="tel:+919384303044" class="contact-link"><span class="icon">📱</span>+91 93843 03044</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Built with 💛 by <span>Janarthanan Palanivel</span> · Paavai Engineering College · 2026</p>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════════
+// GOLD PARTICLE SYSTEM — Indium-style morphing particles
+// ═══════════════════════════════════════════════════
+const canvas = document.getElementById('particle-canvas');
+const ctx = canvas.getContext('2d');
+let W, H, particles = [], animFrame, scrollY = 0, targetShape = 'scatter', currentShape = 'scatter';
+let morphProgress = 1, morphTarget = [], morphFrom = [];
+
+const PARTICLE_COUNT = 600;
+const GOLD = '#f5a623';
+const GOLD2 = '#ffd700';
+
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+window.addEventListener('resize',resize);resize();
+
+class Particle{
+  constructor(){this.reset();}
+  reset(){
+    this.x=Math.random()*W;this.y=Math.random()*H;
+    this.tx=this.x;this.ty=this.y;
+    this.vx=(Math.random()-.5)*.4;this.vy=(Math.random()-.5)*.4;
+    this.size=Math.random()*1.8+.4;
+    this.alpha=Math.random()*.5+.2;
+    this.gold=Math.random()>.5;
+    this.speed=Math.random()*.02+.01;
+  }
+}
+
+function initParticles(){
+  particles=[];
+  for(let i=0;i<PARTICLE_COUNT;i++){particles.push(new Particle());}
+}
+
+// Shape generators
+function dnaShape(n){
+  const pts=[];const cx=W*.5;const cy=H*.5;
+  for(let i=0;i<n;i++){
+    const t=i/n;const y=cy-200+t*400;const angle=t*Math.PI*6;
+    const r=60*Math.sin(t*Math.PI);
+    if(i%2===0){pts.push({x:cx+Math.cos(angle)*r,y});}
+    else{pts.push({x:cx+Math.cos(angle+Math.PI)*r,y});}
+    // rungs
+    if(i%20===0){
+      const ra=Math.cos(angle)*r;
+      for(let j=0;j<5;j++){pts.push({x:cx+ra*(j/4-0.5)*2,y});}
+    }
+  }
+  return pts;
+}
+
+function neuralShape(n){
+  const pts=[];const cx=W*.5;const cy=H*.5;
+  const layers=[4,6,6,4];const lw=320;const lh=300;
+  const nodes=[];
+  layers.forEach((count,li)=>{
+    for(let ni=0;ni<count;ni++){
+      const nx=cx-lw/2+li*(lw/3);
+      const ny=cy-lh/2+ni*(lh/(count-1||1));
+      nodes.push({x:nx,y:ny});
+    }
+  });
+  // fill pts from nodes and connections
+  nodes.forEach(nd=>{for(let j=0;j<8;j++)pts.push({x:nd.x+(Math.random()-.5)*10,y:nd.y+(Math.random()-.5)*10});});
+  // connections
+  for(let i=0;i<nodes.length;i++){
+    for(let j=i+1;j<nodes.length&&j<i+5;j++){
+      const steps=10;
+      for(let s=0;s<=steps;s++){
+        pts.push({x:nodes[i].x+(nodes[j].x-nodes[i].x)*s/steps,y:nodes[i].y+(nodes[j].y-nodes[i].y)*s/steps});
+      }
+    }
+  }
+  while(pts.length<n)pts.push({x:cx+(Math.random()-.5)*400,y:cy+(Math.random()-.5)*300});
+  return pts.slice(0,n);
+}
+
+function moleculeShape(n){
+  const pts=[];const cx=W*.5;const cy=H*.5;
+  const atoms=[{x:0,y:0},{x:100,y:0},{x:200,y:50},{x:150,y:150},{x:50,y:120},{x:-80,y:60},{x:-100,y:-80},{x:80,y:-100}];
+  atoms.forEach(a=>{
+    for(let i=0;i<20;i++)pts.push({x:cx+a.x+(Math.random()-.5)*20,y:cy+a.y+(Math.random()-.5)*20});
+  });
+  for(let i=0;i<atoms.length-1;i++){
+    const a=atoms[i],b=atoms[i+1];
+    for(let s=0;s<=20;s++)pts.push({x:cx+a.x+(b.x-a.x)*s/20,y:cy+a.y+(b.y-a.y)*s/20});
+  }
+  while(pts.length<n)pts.push({x:cx+(Math.random()-.5)*350,y:cy+(Math.random()-.5)*250});
+  return pts.slice(0,n);
+}
+
+function codeShape(n){
+  const pts=[];const cx=W*.5;const cy=H*.5;
+  // < />
+  const shapes=[
+    // <
+    [{x:-200,y:-80},{x:-260,y:0},{x:-200,y:80}],
+    // /
+    [{x:-60,y:100},{x:60,y:-100}],
+    // >
+    [{x:120,y:-80},{x:180,y:0},{x:120,y:80}],
+  ];
+  shapes.forEach(s=>{
+    for(let i=0;i<s.length-1;i++){
+      for(let t=0;t<=30;t++){
+        pts.push({x:cx+s[i].x+(s[i+1].x-s[i].x)*t/30,y:cy+s[i].y+(s[i+1].y-s[i].y)*t/30});
+      }
+    }
+  });
+  while(pts.length<n)pts.push({x:cx+(Math.random()-.5)*500,y:cy+(Math.random()-.5)*200});
+  return pts.slice(0,n);
+}
+
+function waveShape(n){
+  const pts=[];const cy=H*.5;
+  for(let i=0;i<n;i++){
+    const x=W*.1+i*(W*.8/n);
+    const y=cy+Math.sin(i*.15)*80+Math.sin(i*.3)*40;
+    pts.push({x,y});
+  }
+  return pts;
+}
+
+function scatterShape(n){
+  const pts=[];
+  for(let i=0;i<n;i++)pts.push({x:Math.random()*W,y:Math.random()*H});
+  return pts;
+}
+
+function getShapeForSection(sec){
+  if(sec==='hero')return scatterShape(PARTICLE_COUNT);
+  if(sec==='about')return scatterShape(PARTICLE_COUNT);
+  if(sec==='verticals')return dnaShape(PARTICLE_COUNT);
+  if(sec==='experience')return neuralShape(PARTICLE_COUNT);
+  if(sec==='biotech-projects')return moleculeShape(PARTICLE_COUNT);
+  if(sec==='web-projects')return codeShape(PARTICLE_COUNT);
+  if(sec==='skills')return neuralShape(PARTICLE_COUNT);
+  if(sec==='startup')return waveShape(PARTICLE_COUNT);
+  if(sec==='contact')return waveShape(PARTICLE_COUNT);
+  return scatterShape(PARTICLE_COUNT);
+}
+
+let lastSection='hero';
+function detectSection(){
+  const sections=['hero','about','verticals','experience','biotech-projects','web-projects','skills','certifications','startup','collab','contact'];
+  for(let i=sections.length-1;i>=0;i--){
+    const el=document.getElementById(sections[i]);
+    if(el){
+      const rect=el.getBoundingClientRect();
+      if(rect.top<=H/2){
+        if(sections[i]!==lastSection){
+          lastSection=sections[i];
+          startMorph(sections[i]);
+        }
+        return;
+      }
+    }
+  }
+}
+
+function startMorph(sec){
+  morphFrom=particles.map(p=>({x:p.tx,y:p.ty}));
+  const shape=getShapeForSection(sec);
+  morphTarget=shape;
+  morphProgress=0;
+}
+
+function easeInOut(t){return t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;}
+
+function updateParticles(){
+  morphProgress=Math.min(1,morphProgress+.008);
+  const ease=easeInOut(morphProgress);
+  particles.forEach((p,i)=>{
+    const from=morphFrom[i]||{x:p.tx,y:p.ty};
+    const to=morphTarget[i]||{x:Math.random()*W,y:Math.random()*H};
+    if(morphProgress<1){
+      p.tx=from.x+(to.x-from.x)*ease;
+      p.ty=from.y+(to.y-from.y)*ease;
+    } else {
+      // gentle floating
+      p.tx+=p.vx*.5;p.ty+=p.vy*.5;
+      if(morphTarget.length===0){
+        if(p.tx<0||p.tx>W)p.vx*=-1;
+        if(p.ty<0||p.ty>H)p.vy*=-1;
+      }
+    }
+    p.x+=(p.tx-p.x)*.06;
+    p.y+=(p.ty-p.y)*.06;
+  });
+}
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  particles.forEach((p,i)=>{
+    const grad=ctx.createRadialGradient(p.x,p.y,0,p.x,p.y,p.size*2);
+    const c=i%3===0?GOLD2:GOLD;
+    grad.addColorStop(0,c.replace('#','rgba(').replace(/(..)(..)(..)$/,(m,r,g,b)=>`${parseInt(r,16)},${parseInt(g,16)},${parseInt(b,16)},${p.alpha})`));
+    grad.addColorStop(1,'rgba(0,0,0,0)');
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,p.size,0,Math.PI*2);
+    ctx.fillStyle=c+'${Math.floor(p.alpha*255).toString(16).padStart(2,"0")}';
+    ctx.globalAlpha=p.alpha;
+    ctx.fill();
+    ctx.globalAlpha=1;
+  });
+}
+
+function loop(){
+  detectSection();
+  updateParticles();
+  draw();
+  animFrame=requestAnimationFrame(loop);
+}
+
+initParticles();
+morphFrom=particles.map(p=>({x:p.x,y:p.y}));
+morphTarget=scatterShape(PARTICLE_COUNT);
+particles.forEach((p,i)=>{p.tx=morphTarget[i].x;p.ty=morphTarget[i].y;});
+loop();
+
+// ═══════════════════════════════════════════════════
+// SCROLL ANIMATIONS
+// ═══════════════════════════════════════════════════
+const observer=new IntersectionObserver((entries)=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');});
+},{threshold:.1});
+document.querySelectorAll('.fade-up').forEach(el=>observer.observe(el));
+</script>
+</body>
+</html>
